@@ -10,14 +10,28 @@ const Search = () => {
         .then(response => response.json())
       setResults(data.query.search);
     };
-    if (term) {
+
+    if (term && !results.length) {
       search();
+    }
+
+    const timeoutId = setTimeout(() => {
+      if (term) {
+        search();
+      }
+    }, 500);
+
+    return () => {
+      clearTimeout(timeoutId);
     }
   }, [term]); // option to have empty array, array with term inside, or no argument
 
   const renderedResults = results.map((result) => {
     return (
       <div key={result.pageid} className="item">
+        <div className="right floated content">
+          <a href={`https://en.wikipedia.org?curid=${result.pageid}`} className="ui button">GO</a>
+        </div>
         <div className="content">
           <div className="header">
             {result.title}
